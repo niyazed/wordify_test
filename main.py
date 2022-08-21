@@ -8,9 +8,9 @@ import shutil
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-@app.get("/hello")
-async def root():
-    return {"message": "Hello World"}
+@app.get("/hello", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request, "id": 500})
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -32,14 +32,17 @@ def upload(file: UploadFile = File(...)):
         text = pp.extract_text(filepath)
         text = pp.clean_text(text)
         words = pp.process_text(text)
-
+        print(words)
         wordlist, top_ten_kw = gen.get_keywords(words)
+    except Exception:
+        return {"message": "There was an error while generating keywords"}
+        
+    try:
         wordart = gen.get_wordart(wordlist)
-
         wordart_name = file.filename.split('.')[0] + '.png'
         wordart.to_file(wordarts_path + wordart_name)
     except Exception:
-        return {"message": "There was an error while generating"}
+        return {"message": "There was an error while generating wordart"}
 
     return {
             # "Wordart": f"http://0.0.0.0:8001/{wordart_name}",

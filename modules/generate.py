@@ -2,6 +2,13 @@ from wordcloud import WordCloud
 
 
 def get_keywords(words):
+    """
+    It takes a list of words, finds the unique words, counts the number of times each word appears,
+    sorts the words by the number of times they appear, and returns the sorted wordlist and top 10 words
+    
+    :param words: a list of words
+    :return: sorted wordlist and top 10 keywords
+    """
     unique_words = sorted(set(words))
 
     dict={}
@@ -20,6 +27,12 @@ def get_keywords(words):
 
 
 def get_wordart(words):
+    """
+    It takes a list of words as input, and returns a wordart object
+    
+    :param words: list of words
+    :return: A wordart object
+    """
     dict ={}
     for word in words:
         dict[word[0]]=0

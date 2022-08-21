@@ -14,12 +14,25 @@ import re
 
 
 def extract_text(file):
+    """
+    It takes a file and returns the text in that file
+    
+    :param file: The path to the file you want to extract text from
+    :return: A string of the text in the file.
+    """
     text = textract.process(file)
     
     return text.decode()
 
 
 def clean_text(text):
+    """
+    It takes a string as input, and returns a string with all the non-alphanumeric characters removed,
+    and all the words converted to lowercase
+    
+    :param text: The text to be cleaned
+    :return: cleaned text
+    """
     text = text.lower()
     text = re.sub(r'\W', ' ', text)
     text = re.sub(r'\s+', ' ', text, flags=re.I)
@@ -33,6 +46,13 @@ def clean_text(text):
 
 
 def process_text(text):
+    """
+    It takes in a string of text, tokenizes it, tags it with POS tags, removes stopwords, punctuation,
+    and words that are not nouns, adjectives, or verbs, and returns a list of the remaining words
+    
+    :param text: The text that you want to process
+    :return: A list of words that are not stopwords or punctuation.
+    """
     text = nltk.word_tokenize(text)
     POS_tags = nltk.pos_tag(text)
     stopwords = []
