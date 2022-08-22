@@ -1,6 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import FastAPI, File, UploadFile, Request,Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.encoders import jsonable_encoder
 from modules import prepocess as pp
 from modules import generate as gen
 import shutil
@@ -10,6 +11,14 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/hello", response_class=HTMLResponse)
 async def root(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request, "id": 500})
+
+@app.post("/post", response_class=HTMLResponse)
+async def root(request: Request, fname:str = Form()):
+    # data = await request.form()
+    # data = jsonable_encoder(data)
+    # print(data['fname'])
+    print(fname)
     return templates.TemplateResponse("home.html", {"request": request, "id": 500})
 
 
@@ -32,7 +41,7 @@ def upload(file: UploadFile = File(...)):
         text = pp.extract_text(filepath)
         text = pp.clean_text(text)
         words = pp.process_text(text)
-        print(words)
+        # print(words)
         wordlist, top_ten_kw = gen.get_keywords(words)
     except Exception:
         return {"message": "There was an error while generating keywords"}

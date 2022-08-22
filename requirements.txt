@@ -8,6 +8,7 @@ cycler==0.11.0
 docx2txt==0.8
 ebcdic==1.1.1
 extract-msg==0.28.7
+falcon==3.1.0
 fastapi==0.79.0
 fonttools==4.35.0
 h11==0.13.0
