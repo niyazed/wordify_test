@@ -2,29 +2,26 @@ from fastapi import FastAPI, File, UploadFile, Request,Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi.staticfiles import StaticFiles
 from modules import prepocess as pp
 from modules import generate as gen
 import shutil
+import os
+
+MEDIA_PATH = 'media'
+WORDART_PATH = 'wordarts'
+
+if not os.path.exists(MEDIA_PATH):
+    os.mkdir(MEDIA_PATH)
+
+if not os.path.exists(WORDART_PATH):
+    os.mkdir(WORDART_PATH)
+
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="wordarts"), name="static")
 
-@app.get("/hello", response_class=HTMLResponse)
-async def root(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request, "id": 500})
-
-@app.post("/post", response_class=HTMLResponse)
-async def root(request: Request, fname:str = Form()):
-    # data = await request.form()
-    # data = jsonable_encoder(data)
-    # print(data['fname'])
-    print(fname)
-    return templates.TemplateResponse("home.html", {"request": request, "id": 500})
-
-
-@app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "id": id})
 
 @app.post("/upload")
 def upload(file: UploadFile = File(...)):
@@ -54,7 +51,7 @@ def upload(file: UploadFile = File(...)):
         return {"message": "There was an error while generating wordart"}
 
     return {
-            # "Wordart": f"http://0.0.0.0:8001/{wordart_name}",
+            "Wordart": f"http://192.168.1.231:8001/static/{wordart_name}",
             "Top Ten Keywords": f"{top_ten_kw}"
             }
 
