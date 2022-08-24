@@ -1,8 +1,5 @@
 import json
 from fastapi import FastAPI, File, UploadFile, Request,Form
-from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
 from modules import utils
 
@@ -21,7 +18,6 @@ if not os.path.exists(WORDART_PATH):
 
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="wordarts"), name="static")
 
 
