@@ -1,12 +1,14 @@
+import json
 from fastapi import FastAPI, File, UploadFile, Request,Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.staticfiles import StaticFiles
-from modules import prepocess as pp
-from modules import generate as gen
+from modules import utils
+
 import shutil
 import os
+import time
 
 MEDIA_PATH = 'media'
 WORDART_PATH = 'wordarts'
@@ -33,27 +35,9 @@ def upload(file: UploadFile = File(...)):
     except Exception:
         return {"message": "There was an error uploading the file"}
 
-    
-    try:
-        text = pp.extract_text(filepath)
-        text = pp.clean_text(text)
-        words = pp.process_text(text)
-        # print(words)
-        wordlist, top_ten_kw = gen.get_keywords(words)
-    except Exception:
-        return {"message": "There was an error while generating keywords"}
-        
-    try:
-        wordart = gen.get_wordart(wordlist)
-        wordart_name = file.filename.split('.')[0] + '.png'
-        wordart.to_file(wordarts_path + wordart_name)
-    except Exception:
-        return {"message": "There was an error while generating wordart"}
+    wordart_name, top_ten_kw = utils.wordify(file, filepath, wordarts_path)
 
     return {
             "Wordart": f"http://192.168.1.231:8001/static/{wordart_name}",
             "Top Ten Keywords": f"{top_ten_kw}"
             }
-
-
-

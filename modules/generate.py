@@ -1,7 +1,7 @@
 from wordcloud import WordCloud
 
 
-def get_keywords(words):
+def _keywords(words):
     """
     It takes a list of words, finds the unique words, counts the number of times each word appears,
     sorts the words by the number of times they appear, and returns the sorted wordlist and top 10 words
@@ -26,7 +26,7 @@ def get_keywords(words):
     return sorted_wordlist, ten_kw
 
 
-def get_wordart(words):
+def _wordart(words):
     """
     It takes a list of words as input, and returns a wordart object
     
